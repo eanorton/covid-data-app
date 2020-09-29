@@ -2,7 +2,7 @@
   <v-app>
     <AppBar />
 
-    <v-main>
+    <v-main dark>
       <DisplayContainer />
     </v-main>
   </v-app>

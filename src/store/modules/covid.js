@@ -5,13 +5,11 @@ const state = () => ({
   initData: [],
 });
 
-// getters
 const getters = {
   covidData: state => state.data,
   initData: state => state.initData,
 };
 
-// actions
 const actions = {
   async getUSData({ commit }) {
     const res = await api.USData();
@@ -38,7 +36,6 @@ const actions = {
   }
 };
 
-// mutations
 const mutations = {
   setData(state, data) {
     state.data = data

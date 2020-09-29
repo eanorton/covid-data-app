@@ -1,9 +1,11 @@
 <template>
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col>
         <SearchControls />
-        <Graph />
+        <v-card>
+          <Graph />
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
