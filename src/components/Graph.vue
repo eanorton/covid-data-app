@@ -1,7 +1,7 @@
 <template>
   <v-container>
     {{ displayData }}
-    <VueApexCharts type="line" height="350" :options="chartOptions" :series="series" />
+    <VueApexCharts type="line" height="350" :options="chartOptions" :series="series" :key="refreshKey" />
   </v-container>
 </template>
 
@@ -13,9 +13,11 @@ export default {
   name: 'Graph',
   components: { VueApexCharts },
   data: () => ({
+    refreshKey: false,
+    dates: [20200201, 20200301, 20200401, 20200501, 20200601, 20200701, 20200801, 20200901],
     series: [{
-      name: 'Likes',
-      data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5]
+      name: 'Cases',
+      data: [],
     }],
     chartOptions: {
       chart: {
@@ -28,13 +30,13 @@ export default {
       },
       xaxis: {
         type: 'datetime',
-        categories: ['1/11/2000', '2/11/2000', '3/11/2000', '4/11/2000', '5/11/2000', '6/11/2000', '7/11/2000', '8/11/2000', '9/11/2000', '10/11/2000', '11/11/2000', '12/11/2000', '1/11/2001', '2/11/2001', '3/11/2001','4/11/2001' ,'5/11/2001' ,'6/11/2001'],
+        categories: ['2/1/2020', '3/1/2020', '4/1/2020', '5/1/2020', '6/1/2020', '7/1/2020', '8/1/2020', '9/1/2020'],
       },
       title: {
         text: 'Covid Stats',
         align: 'left',
         style: {
-          fontSize: "16px",
+          fontSize: '16px',
           color: '#666'
         }
       },
@@ -52,18 +54,18 @@ export default {
       },
       markers: {
         size: 4,
-        colors: ["#FFA41B"],
-        strokeColors: "#fff",
+        colors: ['#FFA41B'],
+        strokeColors: '#fff',
         strokeWidth: 2,
         hover: {
           size: 7,
         }
       },
       yaxis: {
-        min: -10,
-        max: 40,
+        min: 0,
+        max: 8000000,
         title: {
-          text: 'Engagement',
+          text: 'Cases',
         },
       }
     },
@@ -71,11 +73,24 @@ export default {
   computed: {
     ...mapGetters({
       getData: 'covid/covidData',
+      getinitData: 'covid/initData',
     }),
     displayData() {
-      console.log(this.getData);
       return this.getData;
-    }
+    },
+    dataReady() {
+      return this.getinitData.length > 0;
+    },
+  },
+  async created() {
+    await this.initData();
+  },
+  methods: {
+    async initData() {
+      await this.$store.dispatch('covid/getUSDataMultipleDates', this.dates);
+      this.dataReady && (this.series[0].data = this.getinitData.map(dataObj => dataObj.positive));
+      this.refreshKey = !this.refreshKey;
+    },
   },
 }
 </script>

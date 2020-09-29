@@ -7,7 +7,7 @@
       <v-col cols="auto">
         <v-select
           :items="states"
-          label="States"
+          label="Data by State"
           solo
           @input="getStateData"
         />

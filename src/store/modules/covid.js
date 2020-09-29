@@ -2,11 +2,13 @@ import api from '../../api';
 
 const state = () => ({
   data: null,
+  initData: [],
 });
 
 // getters
 const getters = {
   covidData: state => state.data,
+  initData: state => state.initData,
 };
 
 // actions
@@ -23,6 +25,12 @@ const actions = {
     commit('setData', data);
   },
 
+  async getUSDataMultipleDates({ commit }, dates) {
+    const res = await Promise.all(api.USDataMultipleDates(dates));
+    const data = res.map(resData => resData.data);
+    commit('setMultipleDateData', data);
+  },
+
   async getStateData({ commit }, state) {
     const res = await api.stateData(state);
     const data = res.data;
@@ -34,6 +42,10 @@ const actions = {
 const mutations = {
   setData(state, data) {
     state.data = data
+  },
+
+  setMultipleDateData(state, data) {
+    state.initData = data;
   },
 };
 
